@@ -1,28 +1,37 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import os
-from abc import ABC, abstractmethod
+from abc import abstractmethod, ABC
 
 import pygame
 
 
 class Entity(ABC):
     def __init__(self, name: str, position: tuple):
-        # Obtendo o caminho absoluto do diretório atual do arquivo
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        # Corrigindo o caminho para o diretório de assets
-        asset_path = os.path.join(base_dir, '../asset/', name + '.png')
 
+        # Define os atributos principais
         self.name = name
-        try:
-            # Tentando carregar a imagem usando o caminho absoluto
-            self.surf = pygame.image.load(asset_path)
-        except FileNotFoundError:
-            raise FileNotFoundError(f"Arquivo de imagem não encontrado: {asset_path}")
+        self.position = position
 
-        self.rect = self.surf.get_rect(left=position[0], top=position[1])
+        # Caminho para o diretório base e para o recurso gráfico da entidade
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        asset_path = os.path.join(base_dir, '../asset/', f'{name}.png')
+
+        try:
+            # Tentativa de carregar a superfície da entidade
+            self.surf = pygame.image.load(asset_path).convert_alpha()
+        except FileNotFoundError:
+            raise FileNotFoundError(f"⚠ Arquivo de imagem não encontrado: {asset_path}")
+        except pygame.error as e:
+            raise RuntimeError(f"⚠ Erro ao carregar o recurso '{name}': {e}")
+
+        # Define o retângulo inicial da entidade com base na posição fornecida
+        self.rect = self.surf.get_rect(topleft=position)
+
+        # Velocidade padrão da entidade (pode ser ajustada dinamicamente)
         self.speed = 0
 
     @abstractmethod
-    def move(self, ):
+    def move(self):
+
         pass
