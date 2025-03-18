@@ -2,27 +2,27 @@
 # -*- coding: utf-8 -*-
 import pygame
 
+from code.Const import PLAYER_KEY_UP, PLAYER_KEY_LEFT, PLAYER_KEY_RIGHT, PLAYER_KEY_DOWN, WIN_HEIGHT, WIN_WIDTH
 from code.Entity import Entity
 
 
 class Player(Entity):
     def __init__(self, name: str, position: tuple, speed: int = 5):
-
         super().__init__(name, position)
-        self.speed = speed  # Define a velocidade de movimentação
+        self.speed = speed
 
     def move(self):
 
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            self.rect.x -= self.speed
-        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            self.rect.x += self.speed
-        if keys[pygame.K_UP] or keys[pygame.K_w]:
-            self.rect.y -= self.speed
-        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            self.rect.y += self.speed
+        if keys[PLAYER_KEY_UP[self.name]] and self.rect.top > 0:
+            self.rect.centery -= Entity.SPEED[self.name]
+        if keys[PLAYER_KEY_DOWN[self.name]] and self.rect.bottom < WIN_HEIGHT:
+            self.rect.centery += Entity.SPEED[self.name]
+        if keys[PLAYER_KEY_LEFT[self.name]] and self.rect.left > 0:
+            self.rect.centerx -= Entity.SPEED[self.name]
+        if keys[PLAYER_KEY_RIGHT[self.name]] and self.rect.right < WIN_WIDTH:
+            self.rect.centerx += Entity.SPEED[self.name]
 
         # Limita o movimento do jogador para permanecer dentro da tela
         self.keep_player_within_bounds()
@@ -33,12 +33,12 @@ class Player(Entity):
         screen_width = pygame.display.get_surface().get_width()
         screen_height = pygame.display.get_surface().get_height()
 
-        if self.rect.left < 0:  # Evita que passe pelo lado esquerdo
+        if self.rect.left < 0:
             self.rect.left = 0
-        if self.rect.right > screen_width:  # Evita que passe pelo lado direito
+        if self.rect.right > screen_width:
             self.rect.right = screen_width
-        if self.rect.top < 0:  # Evita que passe pela parte superior
+        if self.rect.top < 0:
             self.rect.top = 0
-        if self.rect.bottom > screen_height:  # Evita que passe pela parte inferior
+        if self.rect.bottom > screen_height:
             self.rect.bottom = screen_height
 

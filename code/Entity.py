@@ -7,6 +7,17 @@ import pygame
 
 
 class Entity(ABC):
+    SPEED = {
+        "Player1": 5,
+        "Player2": 5,
+    }
+
+    speed = {
+        "Player1": 5,
+        "Player2": 5,
+    }
+
+
     def __init__(self, name: str, position: tuple):
 
         # Define os atributos principais
@@ -28,7 +39,6 @@ class Entity(ABC):
         # Define o retângulo inicial da entidade com base na posição fornecida
         self.rect = self.surf.get_rect(topleft=position)
 
-        # Velocidade padrão da entidade (pode ser ajustada dinamicamente)
         self.speed = 0
 
     @abstractmethod
